@@ -5,16 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/service.js"></script>
+    <style>
+        .sidebar-item:hover {
+            background-color: #9a9a9a;
+            border-radius: 0.25rem;
+            transition: background-color 0.3s;
+        }
+    </style>
 </head>
 <body class="h-screen flex font-sans">
     <div class="w-1/5 bg-gray-200 p-5">
         <ul class="space-y-3">
-            <a href="/page1.html"><li class="text-gray-700 mb-5">Dashboard</li></a>
-            <a href="/page2.html"><li class="text-gray-700 mb-5">報表</li></a>
-            <a href="/page3.html"><li class="text-gray-700 mb-5">感測設定</li></a>
+            <a href="/page1.html"><li class="text-gray-700 sidebar-item p-5">Dashboard</li></a>
+            <a href="/page2.html"><li class="text-gray-700 sidebar-item p-5">報表</li></a>
+            <a href="/page3.html"><li class="text-gray-700 sidebar-item p-5">感測設定</li></a>
         </ul>
-
-
     </div>
     <div class="w-4/5 p-5">
         <div class="mb-10 space-y-5">
@@ -23,16 +29,75 @@
                 <input id="warning-temp" type="text" class="border border-gray-300 rounded p-2 flex-1">
             </div>
             <div class="flex items-center space-x-3">
-                <label for="overheat-temp" class="text-lg font-medium">過熱溫度設定:</label>
-                <input id="overheat-temp" type="text" class="border border-gray-300 rounded p-2 flex-1">
+                <label for="danger-temp" class="text-lg font-medium">危險溫度設定:</label>
+                <input id="danger-temp" type="text" class="border border-gray-300 rounded p-2 flex-1">
+            </div>
+            <div class="flex items-center space-x-3">
+                <label for="warning-humidity" class="text-lg font-medium">警戒濕度設定:</label>
+                <input id="warning-humidity" type="text" class="border border-gray-300 rounded p-2 flex-1">
+            </div>
+            <div class="flex items-center space-x-3">
+                <label for="danger-humidity" class="text-lg font-medium">危險濕度設定:</label>
+                <input id="danger-humidity" type="text" class="border border-gray-300 rounded p-2 flex-1">
             </div>
         </div>
 
 
         <div class="mt-10 flex justify-between">
-            <button class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded">恢復預設值</button>
-            <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">確認變更</button>
+            <button class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded" onclick="reset()">恢復預設值</button>
+            <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded" onclick="confirm()">確認變更</button>
         </div>
     </div>
+    <script>
+        var system = getSystem();
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Fill input fields with system values
+            document.getElementById('danger-temp').value = system.red_light;
+            document.getElementById('danger-humidity').value = system.red_humidity;
+            document.getElementById('warning-temp').value = system.yellow_light;
+            document.getElementById('warning-humidity').value = system.yellow_humidity;
+        });
+
+
+        function reset() {
+
+
+            system.red_light = '30';
+            system.red_humidity = '60';
+            system.yellow_light = '25';
+            system.yellow_humidity = '50';
+
+
+            // Fill input fields with system values
+            document.getElementById('danger-temp').value = system.red_light;
+            document.getElementById('danger-humidity').value = system.red_humidity;
+            document.getElementById('warning-temp').value = system.yellow_light;
+            document.getElementById('warning-humidity').value = system.yellow_humidity;
+
+
+
+
+            updateSystem(system);
+
+
+            alert('已恢復預設值');
+        }
+
+
+        function confirm() {
+            system.red_light = document.getElementById('danger-temp').value;
+            system.red_humidity = document.getElementById('danger-humidity').value;
+            system.yellow_light = document.getElementById('warning-temp').value;
+            system.yellow_humidity = document.getElementById('warning-humidity').value;
+
+
+            updateSystem(system);
+
+
+            alert('變更已確認');
+        }
+    </script>
 </body>
 </html>

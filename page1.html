@@ -1,27 +1,47 @@
+<!DOCTYPE html>
 <html lang="en">
+
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/service.js"></script>
+    <style>
+        .sidebar-item:hover {
+            background-color: #9a9a9a;
+            border-radius: 0.25rem;
+            transition: background-color 0.3s;
+        }
+    </style>
 </head>
+
+
 <body class="h-screen flex font-sans">
     <div class="w-1/5 bg-gray-200 p-5">
         <ul class="space-y-3">
-            <a href="/page1.html"><li class="text-gray-700 mb-5">Dashboard</li></a>
-            <a href="/page2.html"><li class="text-gray-700 mb-5">報表</li></a>
-            <a href="/page3.html"><li class="text-gray-700 mb-5">感測設定</li></a>
+            <a href="/page1.html">
+                <li class="text-gray-700 sidebar-item p-5">Dashboard</li>
+            </a>
+            <a href="/page2.html">
+                <li class="text-gray-700 sidebar-item p-5">報表</li>
+            </a>
+            <a href="/page3.html">
+                <li class="text-gray-700 sidebar-item p-5">感測設定</li>
+            </a>
         </ul>
-
-
     </div>
     <div class="w-4/5 p-5">
         <div class="mb-5">
-            <h3 class="text-xl font-semibold mb-3">當前系統運行狀況: <span class="text-green-600">正常</span></h3>
+            <h3 class="text-xl font-semibold mb-3">當前系統運行狀況: <span id="display-label" class="text-green-600">正常</span></h3>
             <div class="flex space-x-3">
-                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded">綠燈</button>
-                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded">黃燈</button>
-                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded">紅燈</button>
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded"
+                    onclick="normal()">綠燈</button>
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded"
+                    onclick="warning()">黃燈</button>
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded"
+                    onclick="danger()">紅燈</button>
             </div>
         </div>
 
@@ -37,5 +57,71 @@
             <div class="w-full h-52 bg-gray-300 rounded"></div>
         </div>
     </div>
+
+
+    <script>
+        var system = getSystem();
+
+
+        function refresh() {
+
+
+            // 如果系統運行狀況是正常的，則將文字改為綠色
+            if (system.status === '正常') {
+                document.querySelector('#display-label').textContent = system.status;
+                document.querySelector('#display-label').classList.remove('text-yellow-600');
+                document.querySelector('#display-label').classList.remove('text-red-600');
+                document.querySelector('#display-label').classList.add('text-green-600');
+            }
+
+
+            // 如果系統運行狀況是警告的，則將文字改為黃色
+            if (system.status === '警告') {
+                document.querySelector('#display-label').textContent = system.status;
+                document.querySelector('#display-label').classList.remove('text-green-600');
+                document.querySelector('#display-label').classList.remove('text-red-600');
+                document.querySelector('#display-label').classList.add('text-yellow-600');
+            }
+
+
+            // 如果系統運行狀況是危險的，則將文字改為紅色
+            if (system.status === '危險') {
+                document.querySelector('#display-label').textContent = system.status;
+                document.querySelector('#display-label').classList.remove('text-yellow-600');
+                document.querySelector('#display-label').classList.remove('text-green-600');
+                document.querySelector('#display-label').classList.add('text-red-600');
+            }
+
+
+            updateSystem(system);
+        }
+
+
+
+
+        function normal() {
+            system.status = '正常';
+            refresh();
+        }
+
+
+        function warning() {
+            system.status = '警告';
+            refresh();
+        }
+
+
+        function danger() {
+            system.status = '危險';
+            refresh();
+        }
+
+
+        refresh();
+
+
+    </script>
 </body>
+
+
 </html>
